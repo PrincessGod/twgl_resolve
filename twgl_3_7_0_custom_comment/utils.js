@@ -33,7 +33,7 @@ define([], function() {
   "use strict";
 
   /**
-   * Copy an object 1 level deep
+   * Copy an object 1 level deep                                               // 浅拷贝，深度为 1
    * @param {object} src object to copy
    * @return {object} the copy
    */
@@ -46,7 +46,7 @@ define([], function() {
   }
 
   /**
-   * Copy named properties
+   * Copy named properties                                                     // 拷贝指定的属性
    *
    * @param {string[]} names names of properties to copy
    * @param {object} src object to copy properties from
@@ -118,8 +118,8 @@ define([], function() {
         && window.console.error
         && typeof window.console.error === "function"
       )
-      ? window.console.error.bind(window.console)
-      : function() { };
+      ? window.console.error.bind(window.console)                              // 创建一个可以随意传递的 error 函数
+      : function() { };                                                        // 将 this 指定为 `window.console` 解决指向问题
 
   var warn =
       (    window.console
