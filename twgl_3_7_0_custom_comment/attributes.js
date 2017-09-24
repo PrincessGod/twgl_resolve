@@ -383,7 +383,7 @@ define([
   }
 
   /**
-   * Sets the contents of a buffer attached to an attribInfo
+   * Sets the contents of a buffer attached to an attribInfo                   // 将缓冲数据绑定到 AttributeInfo 上
    *
    * This is helper function to dynamically update a buffer.
    *
@@ -505,7 +505,7 @@ define([
    */
 
   /**
-   * Creates a BufferInfo from an object of arrays.
+   * Creates a BufferInfo from an object of arrays.                            // 从数组创建一个 BufferInfo
    *
    * This can be passed to {@link module:twgl.setBuffersAndAttributes} and to
    * {@link module:twgl:drawBufferInfo}.
@@ -595,7 +595,7 @@ define([
    * @return {module:twgl.BufferInfo} A BufferInfo
    * @memberOf module:twgl/attributes
    */
-  function createBufferInfoFromArrays(gl, arrays) {
+  function createBufferInfoFromArrays(gl, arrays) {                            // 核心函数，将数据转换为 buffer，并且和 attribute 关联起来
     var bufferInfo = {
       attribs: createAttribsFromArrays(gl, arrays),
     };
@@ -638,14 +638,14 @@ define([
    * @return {WebGLBuffer} a WebGLBuffer containing the data in array.
    * @memberOf module:twgl/attributes
    */
-  function createBufferFromArray(gl, array, arrayName) {
+  function createBufferFromArray(gl, array, arrayName) {                       // 将普通数组转换为强类型数组，并存储在 buffer 中
     var type = arrayName === "indices" ? gl.ELEMENT_ARRAY_BUFFER : gl.ARRAY_BUFFER;
     var typedArray = makeTypedArray(array, arrayName);
     return createBufferFromTypedArray(gl, typedArray, type);
   }
 
   /**
-   * Creates buffers from arrays or typed arrays
+   * Creates buffers from arrays or typed arrays                               // 批量转换普通或强类型数组为 buffer
    *
    * Given something like this
    *
