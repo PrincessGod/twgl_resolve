@@ -842,7 +842,7 @@ define([
     var info = {};
     var numVaryings = gl.getProgramParameter(program, gl.TRANSFORM_FEEDBACK_VARYINGS);
     for (var ii = 0; ii < numVaryings; ++ii) {
-      var varying = gl.getTransformFeedbackVarying(program, ii);
+      var varying = gl.getTransformFeedbackVarying(program, ii);               // 获取所有参与 transform feedback 的变量信息
       info[varying.name] = {
         index: ii,
         type: varying.type,
@@ -860,7 +860,7 @@ define([
    * @param {(module:twgl.BufferInfo|Object<string, module:twgl.AttribInfo>)} [bufferInfo] A BufferInfo or set of AttribInfos.
    * @memberOf module:twgl
    */
-  function bindTransformFeedbackInfo(gl, transformFeedbackInfo, bufferInfo) {
+  function bindTransformFeedbackInfo(gl, transformFeedbackInfo, bufferInfo) {  // 绑定到输出 buffer
     if (transformFeedbackInfo.transformFeedbackInfo) {
       transformFeedbackInfo = transformFeedbackInfo.transformFeedbackInfo;
     }
@@ -892,7 +892,7 @@ define([
    * @param {(module:twgl.ProgramInfo|Object<string, module:twgl.TransformFeedbackInfo>)} transformFeedbackInfo A ProgramInfo or TransformFeedbackInfo.
    * @param {(module:twgl.BufferInfo|Object<string, module:twgl.AttribInfo>)} [bufferInfo] A BufferInfo or set of AttribInfos.
    */
-  function unbindTransformFeedbackInfo(gl, transformFeedbackInfo, bufferInfo) {
+  function unbindTransformFeedbackInfo(gl, transformFeedbackInfo, bufferInfo) {// 解除输出绑定
     if (transformFeedbackInfo.transformFeedbackInfo) {
       transformFeedbackInfo = transformFeedbackInfo.transformFeedbackInfo;
     }
@@ -915,7 +915,7 @@ define([
    * @return {WebGLTransformFeedback} the created transform feedback
    * @memberOf module:twgl
    */
-  function createTransformFeedback(gl, programInfo, bufferInfo) {
+  function createTransformFeedback(gl, programInfo, bufferInfo) {              // 通过 transformFeedbackInfo 创建并设置 buffer
     var tf = gl.createTransformFeedback();
     gl.bindTransformFeedback(gl.TRANSFORM_FEEDBACK, tf);
     gl.useProgram(programInfo.program);
@@ -971,8 +971,8 @@ define([
    * @return {module:twgl.UniformBlockSpec} The created UniformBlockSpec
    * @memberOf module:twgl/programs
    */
-  function createUniformBlockSpecFromProgram(gl, program) {
-    var numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+  function createUniformBlockSpecFromProgram(gl, program) {                    // 通过着色程序创建 UniformData 集合和对应的 UniformBlock 信息
+    var numUniforms = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);     // 通过这些创建 UniformBufferInfo 和 UniformBlock
     var uniformData = [];
     var uniformIndices = [];
 
@@ -1061,8 +1061,8 @@ define([
    * @memberOf module:twgl/programs
    */
   function createUniformBlockInfoFromProgram(gl, program, uniformBlockSpec, blockName) {
-    var blockSpecs = uniformBlockSpec.blockSpecs;
-    var uniformData = uniformBlockSpec.uniformData;
+    var blockSpecs = uniformBlockSpec.blockSpecs;                              // 通过着色程序创建一个特定 UniformBlock 的 UniformBlockInfo
+    var uniformData = uniformBlockSpec.uniformData;                            // 包含对应的 UniformBufferObject，包含对应块中的所有 Uniform 数据
     var blockSpec = blockSpecs[blockName];
     if (!blockSpec) {
       warn("no uniform block object named:", blockName);
@@ -1140,7 +1140,7 @@ define([
    *     no buffer is bound.
    * @memberOf module:twgl/programs
    */
-  function bindUniformBlock(gl, programInfo, uniformBlockInfo) {
+  function bindUniformBlock(gl, programInfo, uniformBlockInfo) {               // 绑定 Uniform buffer 到对应的 UniformBlock
     var uniformBlockSpec = programInfo.uniformBlockSpec || programInfo;
     var blockSpec = uniformBlockSpec.blockSpecs[uniformBlockInfo.name];
     if (blockSpec) {
@@ -1166,7 +1166,7 @@ define([
    *     {@link module:twgl.createUniformBlockInfo}.
    * @memberOf module:twgl/programs
    */
-  function setUniformBlock(gl, programInfo, uniformBlockInfo) {
+  function setUniformBlock(gl, programInfo, uniformBlockInfo) {                // 上传 uniform buffer 到GPU
     if (bindUniformBlock(gl, programInfo, uniformBlockInfo)) {
       gl.bufferData(gl.UNIFORM_BUFFER, uniformBlockInfo.array, gl.DYNAMIC_DRAW);
     }
@@ -1200,7 +1200,7 @@ define([
    *  Any name that doesn't match will be ignored
    * @memberOf module:twgl/programs
    */
-  function setBlockUniforms(uniformBlockInfo, values) {
+  function setBlockUniforms(uniformBlockInfo, values) {                        // 手动设置 uniform buffer 的值
     var uniforms = uniformBlockInfo.uniforms;
     for (var name in values) {
       var array = uniforms[name];
@@ -1329,7 +1329,7 @@ define([
    *
    * @memberOf module:twgl/programs
    */
-  function setUniforms(setters, values) {  // eslint-disable-line
+  function setUniforms(setters, values) {  // eslint-disable-line              // 通过 setter 设置 uniform 的值
     var actualSetters = setters.uniformSetters || setters;
     var numArgs = arguments.length;
     for (var andx = 1; andx < numArgs; ++andx) {
@@ -1359,7 +1359,7 @@ define([
    * @return {Object.<string, function>} an object with a setter for each attribute by name.
    * @memberOf module:twgl/programs
    */
-  function createAttributeSetters(gl, program) {
+  function createAttributeSetters(gl, program) {                               // 创建自定义 attribute setter
     var attribSetters = {
     };
 
@@ -1433,7 +1433,7 @@ define([
    * @memberOf module:twgl/programs
    * @deprecated use {@link module:twgl.setBuffersAndAttributes}
    */
-  function setAttributes(setters, buffers) {
+  function setAttributes(setters, buffers) {                                   // 根据 setter 自动绑定缓冲，开启 attribute
     for (var name in buffers) {
       var setter = setters[name];
       if (setter) {
@@ -1479,7 +1479,7 @@ define([
    *   or a `VertexArrayInfo` as returned from {@link module:twgl.createVertexArrayInfo}
    * @memberOf module:twgl/programs
    */
-  function setBuffersAndAttributes(gl, programInfo, buffers) {
+  function setBuffersAndAttributes(gl, programInfo, buffers) {                 // 设置 attribute 和 uniform 的统一入口
     if (buffers.vertexArrayObject) {
       gl.bindVertexArray(buffers.vertexArrayObject);
     } else {
@@ -1526,7 +1526,7 @@ define([
       attribSetters: attribSetters,
     };
 
-    if (utils.isWebGL2(gl)) {
+    if (utils.isWebGL2(gl)) {                                                  // 支持 WebGL2 的 Uniform buffer 和 Transform feedback
       programInfo.uniformBlockSpec = createUniformBlockSpecFromProgram(gl, program);
       programInfo.transformFeedbackInfo = createTransformFeedbackInfo(gl, program);
     }
@@ -1564,7 +1564,7 @@ define([
    * @return {module:twgl.ProgramInfo?} The created ProgramInfo or null if it failed to link or compile
    * @memberOf module:twgl/programs
    */
-  function createProgramInfo(
+  function createProgramInfo(                                                  // 该模块主函数，创建着色程序，自定义 attribute 和 uniform setter
       gl, shaderSources, opt_attribs, opt_locations, opt_errorCallback) {
     var progOptions = getProgramOptions(opt_attribs, opt_locations, opt_errorCallback);
     var good = true;
@@ -1584,7 +1584,7 @@ define([
     if (!good) {
       return null;
     }
-    var program = createProgramFromSources(gl, shaderSources, progOptions);
+    var program = createProgramFromSources(gl, shaderSources, progOptions);    // 先创建着色程序，再从着色程序中获取 attribute 和 uniform 信息
     if (!program) {
       return null;
     }
